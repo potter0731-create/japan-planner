@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>일본 여행 플래너</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="japan.css">
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#top"><span class="brand-mark">旅</span><span class="brand-text">여행 플래너</span></a>
+    <nav class="nav">
+      <a href="#plan">일정</a><a href="#mapsec">지도</a><a href="#budget">예산</a><a href="#pack">준비물</a><a href="#tips">팁</a>
+      <button id="open-settings" class="ghost" aria-label="여행 정보 설정">설정</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <section id="hero" class="hero"></section>
+
+  <div id="sample-banner" class="banner" hidden>
+    <span>지금 보이는 건 <b>둘러보기용 예시 일정</b>이에요. 다른 예시:
+      <button class="link" data-sample="오사카">오사카·교토</button> · <button class="link" data-sample="도쿄">도쿄</button> · <button class="link" data-sample="후쿠오카">후쿠오카</button></span>
+    <button id="clear-sample" class="ghost">지우고 내 여행 시작</button>
+  </div>
+
+  <section class="composer" aria-labelledby="c-h">
+    <div class="c-head">
+      <h2 id="c-h">생각나는 대로 적어 주세요</h2>
+      <span class="c-ex">예시 넣기 <button class="link" data-example="오사카">오사카</button> · <button class="link" data-example="도쿄">도쿄</button> · <button class="link" data-example="후쿠오카">후쿠오카</button></span>
+    </div>
+    <textarea id="c-text" rows="4" spellcheck="false" placeholder="12/16~19 오사카 교토 2명
+가는 편 KE723 12/16 09:00 인천 → 10:50 간사이
+둘째날 교토
+오후 3시 기요미즈데라 500엔
+- 해 질 녘에 가기
+챙길 것: 우산, 동전지갑
+
+나중에 더 적어도 돼요 — “기요미즈데라 4시로”, “3일차 금각사”, “도톤보리 빼기”"></textarea>
+    <div id="c-preview" class="c-preview" aria-live="polite"></div>
+    <div class="c-foot">
+      <label class="c-day">날짜 없는 줄은 <select id="c-day"></select> 에</label>
+      <span class="c-kbd">Ctrl + Enter</span>
+      <button id="c-save" class="primary" disabled>정리해서 저장</button>
+    </div>
+  </section>
+
+  <div class="cols">
+    <div class="main-col">
+      <section id="mapsec" class="map-card" hidden>
+        <div id="map-tabs" class="map-tabs"></div>
+        <div class="map-box"><div id="map" class="map"></div><p id="map-empty" class="map-empty" hidden>지도에 올릴 수 있는 장소가 아직 없어요.</p></div>
+        <div id="map-miss" class="map-miss"></div>
+      </section>
+      <section id="plan" class="plan"></section>
+    </div>
+    <aside class="side">
+      <section id="budget" class="card"></section>
+      <section id="pack" class="card"></section>
+    </aside>
+  </div>
+
+  <section id="tips" class="tips"></section>
+</main>
+
+<footer class="foot">
+  <a href="cards.html">카드 조합 계산기</a> · 교통·면세 제도는 바뀔 수 있어요. 출발 전 공식 안내를 확인하세요.
+</footer>
+
+<dialog id="settings">
+  <form method="dialog" class="dlg">
+    <div class="dlg-head"><h2>여행 정보</h2><button class="ghost" value="close" aria-label="닫기">닫기</button></div>
+    <div class="grid2">
+      <label class="wide">여행 이름<input id="t-title" placeholder="예: 오사카·교토 먹방 여행"></label>
+      <label>출발일<input type="date" id="t-start"></label>
+      <label>귀국일<input type="date" id="t-end"></label>
+      <label>인원<input type="number" id="t-people" min="1" max="20"></label>
+      <label>환율 (100엔당 원)<input id="t-rate" inputmode="numeric"></label>
+    </div>
+    <p class="lbl">방문 도시</p>
+    <div id="city-picks" class="pills"></div>
+    <p class="lbl">백업 · 공유</p>
+    <p class="hint">입력한 내용은 이 브라우저에만 저장돼요. 동행자에게 보내려면 ‘내보내기’로 복사해서 전달하고, 받은 쪽에서 붙여넣은 뒤 ‘불러오기’를 누르세요.</p>
+    <div class="row">
+      <button type="button" id="export">내보내기 (복사)</button>
+      <button type="button" id="import">불러오기</button>
+      <button type="button" id="print">인쇄 / PDF</button>
+      <button type="button" data-sample="오사카">예시: 오사카</button><button type="button" data-sample="도쿄">예시: 도쿄</button><button type="button" data-sample="후쿠오카">예시: 후쿠오카</button>
+      <button type="button" id="reset" class="danger">전체 초기화</button>
+    </div>
+    <textarea id="io-text" rows="3" placeholder="백업한 내용을 여기에 붙여넣으세요"></textarea>
+    <p id="io-msg" class="hint" aria-live="polite"></p>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous"></script>
+<script src="japan.js"></script>
+</body>
+</html>
